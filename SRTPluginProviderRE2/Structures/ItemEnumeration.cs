@@ -1,4 +1,4 @@
-﻿namespace SRTPluginProviderRE3.Structures
+﻿namespace SRTPluginProviderRE2.Structures
 {
     public enum ItemEnumeration : int
     {

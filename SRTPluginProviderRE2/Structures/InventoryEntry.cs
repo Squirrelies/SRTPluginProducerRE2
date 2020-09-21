@@ -1,11 +1,12 @@
-﻿using SRTPluginBase;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
-namespace SRTPluginProviderRE3.Structures
+namespace SRTPluginProviderRE2.Structures
 {
     [DebuggerDisplay("{_DebuggerDisplay,nq}")]
-    public class InventoryEntry : IEquatable<InventoryEntry>
+    public struct InventoryEntry : IEquatable<InventoryEntry>, IEqualityComparer<InventoryEntry>
     {
         /// <summary>
         /// Debugger display message.
@@ -24,74 +25,66 @@ namespace SRTPluginProviderRE3.Structures
             }
         }
 
-        private static readonly byte[] EMPTY_INVENTORY_ITEM = new byte[20] { 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+        public static readonly int[] EMPTY_INVENTORY_ITEM = new int[5] { 0x00000000, unchecked((int)0xFFFFFFFF), 0x00000000, 0x00000000, 0x01000000 };
 
         // Storage variable.
-        public int SlotPosition { get; set; }
-        private byte[] Data { get; set; }
+        public int SlotPosition { get => _slotPosition; }
+        internal int _slotPosition;
+        public int[] Data { get => _data; }
+        internal int[] _data;
+
+        public long InvDataOffset { get => _invDataOffset; set => _invDataOffset = value; }
+        internal long _invDataOffset;
 
         // Accessor properties.
-        public ItemEnumeration ItemID => (ItemEnumeration)ProcessMemory.HighPerfBitConverter.ToInt32(Data, 0x00);
-        public WeaponEnumeration WeaponID => (WeaponEnumeration)ProcessMemory.HighPerfBitConverter.ToInt32(Data, 0x04);
-        public AttachmentsFlag Attachments => (AttachmentsFlag)ProcessMemory.HighPerfBitConverter.ToInt32(Data, 0x08);
-        public int Quantity => ProcessMemory.HighPerfBitConverter.ToInt32(Data, 0x10);
+        public ItemEnumeration ItemID => (ItemEnumeration)_data[0];
+        public WeaponEnumeration WeaponID => (WeaponEnumeration)_data[1];
+        public AttachmentsFlag Attachments => (AttachmentsFlag)_data[2];
+        public int Quantity => _data[4];
 
         public bool IsItem => ItemID != ItemEnumeration.None && (WeaponID == WeaponEnumeration.None || WeaponID == 0);
         public bool IsWeapon => ItemID == ItemEnumeration.None && WeaponID != WeaponEnumeration.None && WeaponID != 0;
         public bool IsEmptySlot => !IsItem && !IsWeapon;
 
-        public InventoryEntry()
-        {
-            this.SlotPosition = -1;
-            this.Data = EMPTY_INVENTORY_ITEM;
-        }
-
-        public void SetValues(int slotPosition, byte[] data)
-        {
-            this.SlotPosition = slotPosition;
-            this.Data = (data != null) ? data : EMPTY_INVENTORY_ITEM;
-        }
-
-        public bool Equals(InventoryEntry other)
-        {
-            return Data.ByteArrayEquals(other.Data);
-        }
-
+        public bool Equals(InventoryEntry other) => this == other;
+        public bool Equals(InventoryEntry x, InventoryEntry y) => x == y;
         public override bool Equals(object obj)
         {
             if (obj is InventoryEntry)
-                return this.Equals((InventoryEntry)obj);
+                return this == (InventoryEntry)obj;
             else
                 return base.Equals(obj);
         }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
         public static bool operator ==(InventoryEntry obj1, InventoryEntry obj2)
         {
             if (ReferenceEquals(obj1, obj2))
                 return true;
 
-            if (ReferenceEquals(obj1, null))
+            if (ReferenceEquals(obj1, null) || ReferenceEquals(obj1._data, null))
                 return false;
 
-            if (ReferenceEquals(obj2, null))
+            if (ReferenceEquals(obj2, null) || ReferenceEquals(obj2._data, null))
                 return false;
 
-            return obj1.Data.ByteArrayEquals(obj2.Data);
+            return obj1.SlotPosition == obj2.SlotPosition && obj1._data.SequenceEqual(obj2._data);
         }
+        public static bool operator !=(InventoryEntry obj1, InventoryEntry obj2) => !(obj1 == obj2);
 
-        public static bool operator !=(InventoryEntry obj1, InventoryEntry obj2)
+        public override int GetHashCode() => SlotPosition ^ _data.Aggregate((int p, int c) => p ^ c);
+        public int GetHashCode(InventoryEntry obj) => obj.GetHashCode();
+
+        public override string ToString() => _DebuggerDisplay;
+
+        public InventoryEntry Clone()
         {
-            return !(obj1 == obj2);
+            InventoryEntry clone = new InventoryEntry() { _data = new int[this._data.Length] };
+            clone._slotPosition = this._slotPosition;
+            for (int i = 0; i < this._data.Length; ++i)
+                clone._data[i] = this._data[i];
+            clone._invDataOffset = this._invDataOffset;
+            return clone;
         }
+
+        public static InventoryEntry Clone(InventoryEntry subject) => subject.Clone();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using SRTPluginBase;
 using System;
 
-namespace SRTPluginProviderRE3
+namespace SRTPluginProviderRE2
 {
     internal class PluginInfo : IPluginInfo
     {

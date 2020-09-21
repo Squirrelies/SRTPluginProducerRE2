@@ -1,46 +1,72 @@
-﻿using SRTPluginProviderRE3.Structures;
+﻿using SRTPluginProviderRE2.Structures;
 using System;
 using System.Globalization;
 
-namespace SRTPluginProviderRE3
+namespace SRTPluginProviderRE2
 {
     public struct GameMemoryRE2 : IGameMemoryRE2
     {
         private const string IGT_TIMESPAN_STRING_FORMAT = @"hh\:mm\:ss\.fff";
 
-        public int PlayerCurrentHealth { get; set; }
+        public int PlayerCurrentHealth { get => _playerCurrentHealth; }
+        internal int _playerCurrentHealth;
 
-        public int PlayerMaxHealth { get; set; }
-        public int PlayerDeathCount { get; set; }
-        public int PlayerInventoryCount { get; set; }
+        public int PlayerMaxHealth { get => _playerMaxHealth; }
+        internal int _playerMaxHealth;
 
-        public InventoryEntry[] PlayerInventory { get; set; }
+        public int PlayerDeathCount { get => _playerDeathCount; }
+        internal int _playerDeathCount;
 
-        public EnemyHP[] EnemyHealth { get; set; }
+        public int PlayerInventoryCount { get => _playerInventoryCount; }
+        internal int _playerInventoryCount;
 
-        public long IGTRunningTimer { get; set; }
+        public InventoryEntry[] PlayerInventory { get => _playerInventory; }
+        internal InventoryEntry[] _playerInventory;
 
-        public long IGTCutsceneTimer { get; set; }
+        public EnemyHP[] EnemyHealth { get => _enemyHealth; }
+        internal EnemyHP[] _enemyHealth;
 
-        public long IGTMenuTimer { get; set; }
+        public long IGTRunningTimer { get => _igtRunningTimer; }
+        internal long _igtRunningTimer;
 
-        public long IGTPausedTimer { get; set; }
-        public int Difficulty { get; set; }
+        public long IGTCutsceneTimer { get => _igtCutsceneTimer; }
+        internal long _igtCutsceneTimer;
 
-        public int Rank { get; set; }
+        public long IGTMenuTimer { get => _igtMenuTimer; }
+        internal long _igtMenuTimer;
 
-        public float RankScore { get; set; }
+        public long IGTPausedTimer { get => _igtPausedTimer; }
+        internal long _igtPausedTimer;
 
-        public int Saves { get; set; }
+        public int Difficulty { get => _difficulty; }
+        internal int _difficulty;
 
-        public int MapID { get; set; }
+        public int Rank { get => _rank; }
+        internal int _rank;
 
-        public float FrameDelta { get; set; }
+        public float RankScore { get => _rankScore; }
+        internal float _rankScore;
 
-        public bool IsRunning { get; set; }
-        public bool IsCutscene { get; set; }
-        public bool IsMenu { get; set; }
-        public bool IsPaused { get; set; }
+        public int Saves { get => _saves; }
+        internal int _saves;
+
+        public int MapID { get => _mapID; }
+        internal int _mapID;
+
+        public float FrameDelta { get => _frameDelta; }
+        internal float _frameDelta;
+
+        public bool IsRunning { get => _isRunning != 0x00; }
+        internal byte _isRunning;
+
+        public bool IsCutscene { get => _isCutscene != 0x00; }
+        internal byte _isCutscene;
+
+        public bool IsMenu { get => _isMenu != 0x00; }
+        internal byte _isMenu;
+
+        public bool IsPaused { get => _isPaused != 0x00; }
+        internal byte _isPaused;
 
         // Public Properties - Calculated
         public long IGTCalculated => unchecked(IGTRunningTimer - IGTCutsceneTimer - IGTPausedTimer);

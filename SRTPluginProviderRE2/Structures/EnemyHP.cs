@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 
-namespace SRTPluginProviderRE3.Structures
+namespace SRTPluginProviderRE2.Structures
 {
     [DebuggerDisplay("{_DebuggerDisplay,nq}")]
-    public class EnemyHP
+    public struct EnemyHP
     {
         /// <summary>
         /// Debugger display message.
@@ -20,15 +20,13 @@ namespace SRTPluginProviderRE3.Structures
             }
         }
 
-        public int MaximumHP { get; set; }
-        public int CurrentHP { get; set; }
+        public int MaximumHP { get; }
+        internal int _maximumHP;
+
+        public int CurrentHP { get; }
+        internal int _currentHP;
+
         public bool IsAlive => MaximumHP > 0 && CurrentHP > 0 && CurrentHP <= MaximumHP;
         public float Percentage => ((IsAlive) ? (float)CurrentHP / (float)MaximumHP : 0f);
-
-        public EnemyHP()
-        {
-            this.MaximumHP = 0;
-            this.CurrentHP = 0;
-        }
     }
 }

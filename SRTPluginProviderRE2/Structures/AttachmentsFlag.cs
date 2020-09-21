@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SRTPluginProviderRE3.Structures
+namespace SRTPluginProviderRE2.Structures
 {
     [Flags]
     public enum AttachmentsFlag : int
