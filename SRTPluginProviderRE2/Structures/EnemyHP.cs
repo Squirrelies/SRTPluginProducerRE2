@@ -20,10 +20,10 @@ namespace SRTPluginProviderRE2.Structures
             }
         }
 
-        public int MaximumHP { get; }
+        public int MaximumHP { get => _maximumHP; }
         internal int _maximumHP;
 
-        public int CurrentHP { get; }
+        public int CurrentHP { get => _currentHP; }
         internal int _currentHP;
 
         public bool IsAlive => MaximumHP > 0 && CurrentHP > 0 && CurrentHP <= MaximumHP;
