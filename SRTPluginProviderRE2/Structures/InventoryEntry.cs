@@ -28,9 +28,10 @@ namespace SRTPluginProviderRE2.Structures
         public static readonly int[] EMPTY_INVENTORY_ITEM = new int[5] { 0x00000000, unchecked((int)0xFFFFFFFF), 0x00000000, 0x00000000, 0x01000000 };
 
         // Storage variable.
-        public int SlotPosition { get => _slotPosition; }
+        public int SlotPosition { get => _slotPosition; set => _slotPosition = value; }
         internal int _slotPosition;
-        public int[] Data { get => _data; }
+
+        public int[] Data { get => _data; set => _data = value; }
         internal int[] _data;
 
         public long InvDataOffset { get => _invDataOffset; set => _invDataOffset = value; }
