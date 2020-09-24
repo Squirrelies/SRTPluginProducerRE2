@@ -183,10 +183,21 @@ namespace SRTPluginProviderRE2
             {
                 try
                 {
-                    fixed (int* p = &gameMemoryValues.EnemyHealth[i]._maximumHP)
-                        PointerEnemyEntries[i].TryDerefInt(0x54, p);
-                    fixed (int* p = &gameMemoryValues.EnemyHealth[i]._currentHP)
-                        PointerEnemyEntries[i].TryDerefInt(0x58, p);
+                    // Check to see if the pointer is currently valid. It can become invalid when rooms are changed.
+                    if (PointerEnemyEntries[i].Address != IntPtr.Zero)
+                    {
+                        fixed (int* p = &gameMemoryValues.EnemyHealth[i]._maximumHP)
+                            PointerEnemyEntries[i].TryDerefInt(0x54, p);
+                        fixed (int* p = &gameMemoryValues.EnemyHealth[i]._currentHP)
+                            PointerEnemyEntries[i].TryDerefInt(0x58, p);
+                    }
+                    else
+                    {
+                        // Clear these values out so stale data isn't left behind when the pointer address is no longer value and nothing valid gets read.
+                        // This happens when the game removes pointers from the table (map/room change).
+                        gameMemoryValues.EnemyHealth[i]._maximumHP = 0;
+                        gameMemoryValues.EnemyHealth[i]._currentHP = 0;
+                    }
                 }
                 catch
                 {
