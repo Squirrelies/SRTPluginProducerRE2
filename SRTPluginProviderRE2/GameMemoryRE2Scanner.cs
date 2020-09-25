@@ -134,7 +134,7 @@ namespace SRTPluginProviderRE2
             fixed (int* p = &gameMemoryValues._playerCurrentHealth)
                 PointerPlayerHP.TryDerefInt(0x58, p);
             fixed (byte* p = &gameMemoryValues._playerPoisoned)
-                PointerPlayerHP.TryDerefByte(0x258, p);
+                PointerPlayerPoison.TryDerefByte(0x258, p);
             fixed (int* p = &gameMemoryValues._rank)
                 PointerRank.TryDerefInt(0x58, p);
             fixed (float* p = &gameMemoryValues._rankScore)
