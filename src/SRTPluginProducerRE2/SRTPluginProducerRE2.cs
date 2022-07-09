@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 
-namespace SRTPluginProviderRE2
+namespace SRTPluginProducerRE2
 {
-    public class SRTPluginProviderRE2 : IPluginProvider
+    public class SRTPluginProducerRE2 : IPluginProvider
     {
         private Process process;
         private GameMemoryRE2Scanner gameMemoryScanner;

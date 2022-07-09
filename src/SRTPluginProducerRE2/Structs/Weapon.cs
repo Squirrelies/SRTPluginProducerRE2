@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SRTPluginProviderRE2.Structures
+namespace SRTPluginProducerRE2.Structs
 {
     public struct Weapon : IEquatable<Weapon>
     {
