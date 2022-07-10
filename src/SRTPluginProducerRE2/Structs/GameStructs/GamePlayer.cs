@@ -6,8 +6,8 @@ namespace SRTPluginProducerRE2.Structs.GameStructs
 
     public struct GamePlayer
     {
-        [FieldOffset(0x0)] private int maxHP;
-        [FieldOffset(0x4)] private int currentHP;
+        [FieldOffset(0x0)] private readonly int maxHP;
+        [FieldOffset(0x4)] private readonly int currentHP;
 
         public int CurrentHP => currentHP;
         public int MaxHP => maxHP;

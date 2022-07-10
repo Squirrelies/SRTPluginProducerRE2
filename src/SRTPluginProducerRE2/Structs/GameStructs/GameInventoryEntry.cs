@@ -7,13 +7,15 @@ namespace SRTPluginProducerRE2.Structs.GameStructs
 
     public struct GameInventoryEntry
     {
-        [FieldOffset(0x10)] private int itemID;
-        [FieldOffset(0x14)] private int weaponID;
-        [FieldOffset(0x18)] private int attachments;
-        [FieldOffset(0x20)] private int quantity;
+        [FieldOffset(0x10)] private readonly int itemID;
+        [FieldOffset(0x14)] private readonly int weaponID;
+        [FieldOffset(0x18)] private readonly int attachments;
+        [FieldOffset(0x20)] private readonly int quantity;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string _DebuggerDisplay
+#pragma warning restore IDE1006 // Naming Styles
         {
             get
             {

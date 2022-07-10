@@ -6,8 +6,8 @@ namespace SRTPluginProducerRE2.Structs.GameStructs
 
     public struct GameRankManager
     {
-        [FieldOffset(0x0)] private int rank;
-        [FieldOffset(0x4)] private float rankScore;
+        [FieldOffset(0x0)] private readonly int rank;
+        [FieldOffset(0x4)] private readonly float rankScore;
 
         public int Rank => rank;
         public float RankScore => rankScore;

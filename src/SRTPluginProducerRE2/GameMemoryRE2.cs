@@ -13,32 +13,32 @@ namespace SRTPluginProducerRE2
 
         public string GameName => "RE2R";
 
-        public string VersionInfo => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+        public string? VersionInfo => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
 
-        public GameTimer Timer { get => _timer; }
-        internal GameTimer _timer;
+        public GameTimer Timer { get => timer; }
+        internal GameTimer timer;
 
-        public CharacterEnumeration PlayerCharacter { get => (CharacterEnumeration)_playerCharacter; set => _playerCharacter = (int)value; }
-        internal int _playerCharacter;
+        public CharacterEnumeration? PlayerCharacter { get => (CharacterEnumeration?)playerCharacter; set => playerCharacter = (int?)value; }
+        internal int? playerCharacter;
 
-        public GamePlayer Player { get => _player; set => _player = value; }
-        internal GamePlayer _player;
+        public GamePlayer Player { get => player; set => player = value; }
+        internal GamePlayer player;
 
-        public string PlayerName => string.Format("{0}: ", PlayerCharacter.ToString());
+        public string? PlayerName => string.Format("{0}: ", PlayerCharacter?.ToString());
 
-        public bool IsPoisoned { get => _isPoisoned == 0x01; }
-        internal byte _isPoisoned;
+        public bool? IsPoisoned { get => isPoisoned == 0x01; }
+        internal byte? isPoisoned;
 
-        public GameRankManager RankManager { get => _rankManager; }
-        internal GameRankManager _rankManager;
+        public GameRankManager RankManager { get => rankManager; }
+        internal GameRankManager rankManager;
 
-        public int PlayerInventoryCount { get => _playerInventoryCount; }
-        internal int _playerInventoryCount;
-        public InventoryEntry[] PlayerInventory { get => _playerInventory; }
-        internal InventoryEntry[] _playerInventory;
+        public int? PlayerInventoryCount { get => playerInventoryCount; }
+        internal int? playerInventoryCount;
+        public InventoryEntry[]? PlayerInventory { get => playerInventory; }
+        internal InventoryEntry[]? playerInventory;
 
-        public EnemyHP[] EnemyHealth { get => _enemyHealth; }
-        internal EnemyHP[] _enemyHealth;
+        public EnemyHP[]? EnemyHealth { get => enemyHealth; }
+        internal EnemyHP[]? enemyHealth;
 
         // Public Properties - Calculated
         public long IGTCalculated => unchecked(Timer.IGTRunningTimer - Timer.IGTCutsceneTimer - Timer.IGTPausedTimer);

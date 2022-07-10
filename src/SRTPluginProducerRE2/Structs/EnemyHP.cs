@@ -9,7 +9,9 @@ namespace SRTPluginProducerRE2.Structs
         /// Debugger display message.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string _DebuggerDisplay
+#pragma warning restore IDE1006 // Naming Styles
         {
             get
             {
@@ -22,15 +24,15 @@ namespace SRTPluginProducerRE2.Structs
             }
         }
 
-        public int MaximumHP { get => _maximumHP; }
-        internal int _maximumHP;
+        public int? MaximumHP { get => maximumHP; }
+        internal int? maximumHP;
 
-        public int CurrentHP { get => _currentHP; }
-        internal int _currentHP;
+        public int? CurrentHP { get => currentHP; }
+        internal int? currentHP;
 
         public bool IsTrigger => MaximumHP == 1 && CurrentHP == 1; // Some triggers load in as enemies as 1/1 hp. We're excluding that by checking to make sure max hp is greater than 1 rather than greater than 0.
         public bool IsAlive => !IsTrigger && MaximumHP > 0 && CurrentHP > 0 && CurrentHP <= MaximumHP;
         public bool IsDamaged => MaximumHP > 0 && CurrentHP > 0 && CurrentHP < MaximumHP;
-        public float Percentage => ((IsAlive) ? (float)CurrentHP / (float)MaximumHP : 0f);
+        public float Percentage => ((IsAlive) ? (float)(CurrentHP ?? 0) / (float)(MaximumHP ?? 0) : 0f);
     }
 }

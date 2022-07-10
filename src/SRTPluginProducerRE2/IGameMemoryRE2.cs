@@ -8,25 +8,25 @@ namespace SRTPluginProducerRE2
     {
         string GameName { get; }
 
-        string VersionInfo { get; }
+        string? VersionInfo { get; }
 
         GameTimer Timer { get; }
 
-        CharacterEnumeration PlayerCharacter { get; }
+        CharacterEnumeration? PlayerCharacter { get; }
 
         GamePlayer Player { get; }
 
-        string PlayerName { get; }
+        string? PlayerName { get; }
 
-        bool IsPoisoned { get; }
+        bool? IsPoisoned { get; }
 
         GameRankManager RankManager { get; }
 
-        int PlayerInventoryCount { get; }
+        int? PlayerInventoryCount { get; }
 
-        InventoryEntry[] PlayerInventory { get; }
+        InventoryEntry[]? PlayerInventory { get; }
 
-        EnemyHP[] EnemyHealth { get; }
+        EnemyHP[]? EnemyHealth { get; }
 
         long IGTCalculated { get; }
 

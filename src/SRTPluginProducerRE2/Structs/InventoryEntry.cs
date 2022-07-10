@@ -9,7 +9,9 @@ namespace SRTPluginProducerRE2.Structs
     public struct InventoryEntry
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string _DebuggerDisplay
+#pragma warning restore IDE1006 // Naming Styles
         {
             get
             {
@@ -22,11 +24,11 @@ namespace SRTPluginProducerRE2.Structs
             }
         }
 
-        public int SlotPosition { get; set; }
-        public ItemEnumeration ItemID { get; set; }
-        public WeaponEnumeration WeaponID { get; set; }
-        public AttachmentsFlag Attachments { get; set; }
-        public int Quantity { get; set; }
+        public int? SlotPosition { get; set; }
+        public ItemEnumeration? ItemID { get; set; }
+        public WeaponEnumeration? WeaponID { get; set; }
+        public AttachmentsFlag? Attachments { get; set; }
+        public int? Quantity { get; set; }
         public bool IsItem => ItemID != ItemEnumeration.None && (WeaponID == WeaponEnumeration.None || WeaponID == 0);
         public bool IsWeapon => ItemID == ItemEnumeration.None && WeaponID != WeaponEnumeration.None && WeaponID != 0;
         public bool IsEmptySlot => !IsItem && !IsWeapon;
