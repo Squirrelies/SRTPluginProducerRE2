@@ -11,7 +11,7 @@ namespace SRTPluginProducerRE2
 
         public string Author => "Squirrelies";
 
-        public Uri MoreInfoURL => new Uri("https://github.com/SpeedrunTooling/SRTPluginProducerRE2");
+        public Uri MoreInfoURL => new Uri("https://github.com/Squirrelies/SRTPluginProducerRE2");
 
         public int VersionMajor => assemblyVersion?.Major ?? 0;
 
