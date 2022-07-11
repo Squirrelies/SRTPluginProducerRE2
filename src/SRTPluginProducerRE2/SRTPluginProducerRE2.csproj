@@ -27,15 +27,12 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\ProcessMemory\ProcessMemory\ProcessMemory.csproj" />
-	</ItemGroup>
-
   <ItemGroup>
 	  <PackageReference Include="SRTPluginBase" Version="4.0.*-*">
 		  <Private>false</Private>
 		  <ExcludeAssets>runtime</ExcludeAssets>
 	  </PackageReference>
+	  <PackageReference Include="ProcessMemory64" Version="4.0.*-*" />
   </ItemGroup>
 	
 </Project>
