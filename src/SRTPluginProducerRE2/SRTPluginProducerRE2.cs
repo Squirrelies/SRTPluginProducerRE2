@@ -1,11 +1,10 @@
-﻿using ProcessMemory;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProcessMemory;
 using SRTPluginBase;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
+using System.Threading.Tasks;
 
 namespace SRTPluginProducerRE2
 {
@@ -20,7 +19,7 @@ namespace SRTPluginProducerRE2
 
         private MultilevelPointer? playerHPPtr;
 
-        public int Startup()
+        public SRTPluginProducerRE2()
         {
             Process? gameProc = Process.GetProcessesByName("re2")?.FirstOrDefault();
             IntPtr baseAddress = gameProc?.MainModule?.BaseAddress ?? IntPtr.Zero;
@@ -33,18 +32,21 @@ namespace SRTPluginProducerRE2
                     playerHPPtr = new MultilevelPointer(processMemoryHandler, (nint*)(baseAddress + 0x09160F30), 0x50, 0x20);
                 }
                 Available = true;
-                return 0;
             }
-            return 1;
         }
 
-        public int Shutdown()
+        public void Dispose()
         {
             Available = false;
             playerHPPtr = null;
             processMemoryHandler?.Dispose();
             processMemoryHandler = null;
-            return 0;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            Dispose();
+            await Task.CompletedTask;
         }
 
         public object? PullData()
@@ -55,16 +57,9 @@ namespace SRTPluginProducerRE2
             return null;
         }
 
-        public object? CommandHandler(string command, KeyValuePair<string, string[]>[] arguments, out HttpStatusCode statusCode)
+        public IActionResult HttpHandler(ControllerBase controller)
         {
-            switch (command)
-            {
-                default:
-                    {
-                        statusCode = HttpStatusCode.NotImplemented;
-                        return null;
-                    }
-            }
+            return controller.NoContent();
         }
 
         public bool Equals(IPlugin? other) => Equals(this, other);
