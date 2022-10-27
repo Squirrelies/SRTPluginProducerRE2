@@ -10,13 +10,14 @@ namespace SRTPluginProducerRE2
 {
     public class SRTPluginProducerRE2 : IPluginProducer
     {
-        // Public Properties
-        public bool Available { get; private set; }
+        // Properties
         public IPluginInfo Info => new PluginInfo();
+        public IPluginHost? Host { get; set; }
+        public object? Data { get; private set; }
+        public DateTime? LastUpdated { get; private set; }
 
-        // Private Fields
+        // Fields
         private ProcessMemoryHandler? processMemoryHandler;
-
         private MultilevelPointer? playerHPPtr;
 
         public SRTPluginProducerRE2()
@@ -31,13 +32,25 @@ namespace SRTPluginProducerRE2
                 {
                     playerHPPtr = new MultilevelPointer(processMemoryHandler, (nint*)(baseAddress + 0x09160F30), 0x50, 0x20);
                 }
-                Available = true;
             }
+        }
+
+        public void Refresh()
+        {
+            if (processMemoryHandler != null && playerHPPtr != null)
+            {
+                Data = new { CurrentHP = playerHPPtr.DerefInt(0x58), MaxHP = playerHPPtr.DerefInt(0x54) };
+                LastUpdated = DateTime.UtcNow;
+            }
+        }
+
+        public IActionResult HttpHandler(ControllerBase controller)
+        {
+            return controller.NoContent();
         }
 
         public void Dispose()
         {
-            Available = false;
             playerHPPtr = null;
             processMemoryHandler?.Dispose();
             processMemoryHandler = null;
@@ -47,19 +60,6 @@ namespace SRTPluginProducerRE2
         {
             Dispose();
             await Task.CompletedTask;
-        }
-
-        public object? PullData()
-        {
-            if (Available && processMemoryHandler != null && playerHPPtr != null)
-                return new { CurrentHP = playerHPPtr.DerefInt(0x58), MaxHP = playerHPPtr.DerefInt(0x54) };
-
-            return null;
-        }
-
-        public IActionResult HttpHandler(ControllerBase controller)
-        {
-            return controller.NoContent();
         }
 
         public bool Equals(IPlugin? other) => Equals(this, other);
