@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ProcessMemory;
 using SRTPluginBase;
+using SRTPluginProducerRE2.JSONClasses.SRTPluginManager;
 using System;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SRTPluginProducerRE2
@@ -30,7 +35,7 @@ namespace SRTPluginProducerRE2
                 processMemoryHandler = new ProcessMemoryHandler(pid);
                 unsafe
                 {
-                    playerHPPtr = new MultilevelPointer(processMemoryHandler, (nint*)(baseAddress + 0x09160F30), 0x50, 0x20);
+                    playerHPPtr = new MultilevelPointer(processMemoryHandler, (nint*)(baseAddress + 0x091610D0), 0x50, 0x20);
                 }
             }
         }
@@ -44,9 +49,46 @@ namespace SRTPluginProducerRE2
             }
         }
 
-        public IActionResult HttpHandler(ControllerBase controller)
+        public async Task<IActionResult> HttpHandlerAsync(ControllerBase controller)
         {
-            return controller.NoContent();
+            switch (controller.RouteData.Values["Command"] as string)
+            {
+                // Example of implementing custom http responses. This implementation may not be best practice, it is just here to illustrate the possible strength and possibilities.
+                // GET: /api/v1/Plugin/SRTPluginProducerRE2/Info2
+                // GET: /api/v1/Plugin/SRTPluginProducerRE2/Info2?Override=SRTPluginProviderSIGNALIS
+                case "Info2":
+                    {
+                        string? pluginName = null;
+                        Rootobject? jsonCfg = null;
+                        try
+                        {
+                            jsonCfg = await System.Text.Json.JsonSerializer.DeserializeAsync<Rootobject>(await HttpClientFactory.Create(new HttpClientHandler()).GetStreamAsync(@"https://raw.githubusercontent.com/SpeedrunTooling/SRTPlugins/main/SRTPluginManager.cfg"));
+                        }
+                        catch { }
+
+                        if (jsonCfg is not null)
+                        {
+                            pluginName = controller.Request.Query.ContainsKey("Override") ? controller.Request.Query["Override"].FirstOrDefault() : "SRTPluginProviderRE2";
+                            Pluginconfig? pluginConfig = jsonCfg!.PluginConfig.Where(a => string.Equals(a.pluginName, pluginName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                            if (pluginConfig is not null)
+                            {
+                                controller.Response.ContentType = "application/json";
+                                await System.Text.Json.JsonSerializer.SerializeAsync(controller.Response.Body, pluginConfig);
+                                return controller.StatusCode((int)HttpStatusCode.OK);
+                            }
+                        }
+                        
+                        return controller.NotFound(pluginName);
+                    }
+
+                // Example of handling unknown http requests.
+                // GET: /api/v1/Plugin/SRTPluginProducerRE2/rksjbvgjbaethkae
+                default:
+                    {
+                        return controller.NotFound();
+                    }
+            }
         }
 
         public void Dispose()
