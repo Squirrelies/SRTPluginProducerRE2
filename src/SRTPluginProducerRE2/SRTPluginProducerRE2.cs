@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ProcessMemory;
 using SRTPluginBase;
 using SRTPluginProducerRE2.JSONClasses.SRTPluginManager;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -15,9 +17,11 @@ namespace SRTPluginProducerRE2
 {
     public class SRTPluginProducerRE2 : IPluginProducer
     {
+        private readonly ILogger<SRTPluginProducerRE2> logger;
+        private readonly IPluginHost pluginHost;
+
         // Properties
         public IPluginInfo Info => new PluginInfo();
-        public IPluginHost? Host { get; set; }
         public object? Data { get; private set; }
         public DateTime? LastUpdated { get; private set; }
 
@@ -25,8 +29,11 @@ namespace SRTPluginProducerRE2
         private ProcessMemoryHandler? processMemoryHandler;
         private MultilevelPointer? playerHPPtr;
 
-        public SRTPluginProducerRE2()
+        public SRTPluginProducerRE2(ILogger<SRTPluginProducerRE2> logger, IPluginHost pluginHost)
         {
+            this.logger = logger;
+            this.pluginHost = pluginHost;
+
             Process? gameProc = Process.GetProcessesByName("re2")?.FirstOrDefault();
             IntPtr baseAddress = gameProc?.MainModule?.BaseAddress ?? IntPtr.Zero;
             uint pid = (uint)(gameProc?.Id ?? 0);
@@ -86,7 +93,7 @@ namespace SRTPluginProducerRE2
                 // GET: /api/v1/Plugin/SRTPluginProducerRE2/rksjbvgjbaethkae
                 default:
                     {
-                        return controller.NotFound();
+                        return controller.NotFound($"Unknown command: {((IDictionary<string, object>)controller.RouteData.Values)["Command"]}{Environment.NewLine}Parameters: {controller.Request.Query.Select(a => $"\"{a.Key}\"=\"{a.Value}\"").Aggregate((o, n) => $"{o}, {n}")}");
                     }
             }
         }
