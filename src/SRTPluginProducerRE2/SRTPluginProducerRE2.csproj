@@ -6,6 +6,7 @@
 		<LangVersion>latest</LangVersion>
 		<Platforms>x64</Platforms>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CopyDestionationPath>$(SolutionDir)..\..\SpeedRunTool\SRTHost\src\SRTHost\bin\$(Configuration)\net7.0-windows\plugins</CopyDestionationPath>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -13,7 +14,7 @@
 		<Description>A producer plugin for the SRT Host to provide memory values to other plugins.</Description>
 		<Company>Squirrelies</Company>
 		<Authors>$(Company)</Authors>
-		<Copyright>Copyright © 2022 $(Company)</Copyright>
+		<Copyright>Copyright © 2023 $(Company)</Copyright>
 		<Version>4.0.0</Version>
 		<FileVersion>4.0.0</FileVersion>
 		<AssemblyVersion>4.0.0</AssemblyVersion>
@@ -36,6 +37,33 @@
 		  <ExcludeAssets>runtime</ExcludeAssets>
 	  </PackageReference>
 	  <PackageReference Include="ProcessMemory64" Version="4.0.*-*" />
+  </ItemGroup>
+
+	<Target Name="CopyOutputToDestination" AfterTargets="AfterBuild">
+		<ItemGroup>
+			<OutputFiles Include="$(OutDir)**\*"></OutputFiles>
+		</ItemGroup>
+		<Message Text="Copying files: @(OutputFiles)" Importance="high" />
+		<Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(CopyDestionationPath)\$(ProjectName)\%(RecursiveDir)" OverwriteReadOnlyFiles="true"></Copy>
+	</Target>
+
+  <ItemGroup>
+    <Resource Include="Pages\Sample.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 	
 </Project>

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SRTPluginProducerRE2
@@ -56,15 +57,27 @@ namespace SRTPluginProducerRE2
             }
         }
 
-        public async Task<IActionResult> HttpHandlerAsync(ControllerBase controller)
+        public async Task<IActionResult> HttpHandlerAsync(Controller controller)
         {
             LogPluginHttpHandlerAsyncReceived(controller.Request.Path.Value);
             switch (controller.RouteData.Values["Command"] as string)
             {
-                // Example of implementing custom http responses. This implementation may not be best practice, it is just here to illustrate the possible strength and possibilities.
-                // GET: /api/v1/Plugin/SRTPluginProducerRE2/Info2
-                // GET: /api/v1/Plugin/SRTPluginProducerRE2/Info2?Override=SRTPluginProviderSIGNALIS
-                case "Info2":
+				// Example of implementing custom http responses. This implementation may not be best practice, it is just here to illustrate the possible strength and possibilities.
+
+				// GET: /api/v1/Plugin/SRTPluginProducerRE2/Sample
+				case "Sample":
+					{
+						return controller.Content(Properties.Resources.Sample, "text/html", Encoding.UTF8);
+					}
+
+				case "Sample2":
+					{
+						return controller.Content("<html><head><title>Sample2</title></head><body></body></html>", "text/html", Encoding.UTF8);
+					}
+
+				// GET: /api/v1/Plugin/SRTPluginProducerRE2/Info2
+				// GET: /api/v1/Plugin/SRTPluginProducerRE2/Info2?Override=SRTPluginProviderSIGNALIS
+				case "Info2":
                     {
                         string? pluginName = null;
                         Rootobject? jsonCfg = null;
