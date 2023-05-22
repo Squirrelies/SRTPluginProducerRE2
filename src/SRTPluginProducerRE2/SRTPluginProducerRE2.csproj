@@ -29,6 +29,7 @@
 	</PropertyGroup>
 
   <ItemGroup>
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
 	  <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 	  <PackageReference Include="SRTPluginBase" Version="4.0.*-*">
 		  <Private>false</Private>

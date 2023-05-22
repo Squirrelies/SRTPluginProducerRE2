@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace SRTPluginProducerRE2
 {
-    public class SRTPluginProducerRE2 : IPluginProducer
+    public partial class SRTPluginProducerRE2 : IPluginProducer
     {
         private readonly ILogger<SRTPluginProducerRE2> logger;
         private readonly IPluginHost pluginHost;
@@ -58,6 +58,7 @@ namespace SRTPluginProducerRE2
 
         public async Task<IActionResult> HttpHandlerAsync(ControllerBase controller)
         {
+            LogPluginHttpHandlerAsyncReceived(controller.Request.Path.Value);
             switch (controller.RouteData.Values["Command"] as string)
             {
                 // Example of implementing custom http responses. This implementation may not be best practice, it is just here to illustrate the possible strength and possibilities.
